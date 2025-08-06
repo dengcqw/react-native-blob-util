@@ -581,4 +581,68 @@ typedef NS_ENUM(NSUInteger, ResponseFormat) {
     }
 }
 
+- (void) uploadVideo:(__weak NSDictionary  * _Nullable )options
+              baseModule:(__strong ReactNativeBlobUtil * _Nullable)baseModule
+              taskId:(NSString * _Nullable)taskId
+  taskOperationQueue:(NSOperationQueue * _Nonnull)operationQueue
+            callback:(_Nullable RCTResponseSenderBlock) callback
+{
+    self.taskId = taskId;
+    self.callback = callback;
+    self.baseModule = baseModule;
+    self.options = options;
+
+    NSString * userID = options[@"userID"];
+    self.videoPublish = [[TXUGCPublish alloc] initWithUserID: userID];
+    self.videoPublish.delegate = self;
+
+    // network status indicator
+    if ([[options objectForKey:CONFIG_INDICATOR] boolValue]) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
+        });
+    }
+
+    NSString * fileURL = [options[@"fileURL"] stringByRemovingPercentEncoding];
+    TXPublishParam *publishParam = [[TXPublishParam alloc] init];
+    publishParam.signature  = options[@"sign"];
+    publishParam.videoPath  = fileURL;
+    [self.videoPublish publishVideo:publishParam];
+}
+
+- (void)onPublishProgress:(NSInteger)uploadBytes totalBytes:(NSInteger)totalBytes {
+  NSLog(@"onPublishProgress [%ld/%ld]", uploadBytes, totalBytes);
+
+  NSNumber * now = [NSNumber numberWithFloat:((float)uploadBytes/(float)totalBytes)];
+
+  if ([self.uploadProgressConfig shouldReport:now]) {
+      NSDictionary *body = @{
+             @"taskId": self.taskId,
+             @"written": [NSString stringWithFormat:@"%ld", (long) uploadBytes],
+             @"total": [NSString stringWithFormat:@"%ld", (long) totalBytes],
+             @"percent": @((uploadBytes * 1.0)/totalBytes)
+             }
+      ];
+      [self.baseModule emitEventDict:EVENT_PROGRESS_UPLOAD body:body];
+  }
+}
+
+- (void)onPublishComplete:(TXPublishResult*)result {
+    NSLog(@"onPublishComplete [%d/%@]", result.retCode, result.retCode == 0? result.videoURL: result.descMsg);
+    if (result.retCode == 0) {
+      self.callback(@[@{@"videoURL": result.videoURL, @"videoId": result.videoId }, [NSNull null]]);
+    } else {
+      self.callback(@[[NSNull null], result.descMsg]);
+    }
+}
+
+- (void)cancel {
+    if (self.task && self.task.state == NSURLSessionTaskStateRunning) {
+        [self.task cancel];
+    } else {
+       [self.publishVideo canclePublish];
+    }
+}
+
+
 @end

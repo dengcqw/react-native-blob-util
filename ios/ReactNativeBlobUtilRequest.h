@@ -13,6 +13,8 @@
 
 #import "ReactNativeBlobUtilProgress.h"
 #import "ReactNativeBlobUtil.h"
+#import "TXUGCPublishListener.h"
+#import "TXUGCPublish.h"
 
 #if __has_include(<React/RCTAssert.h>)
 #import <React/RCTBridgeModule.h>
@@ -20,7 +22,9 @@
 #import "RCTBridgeModule.h"
 #endif
 
-@interface ReactNativeBlobUtilRequest : NSObject <NSURLSessionDelegate, NSURLSessionTaskDelegate, NSURLSessionDataDelegate, NSURLSessionDownloadDelegate>
+@interface ReactNativeBlobUtilRequest : NSObject <NSURLSessionDelegate, NSURLSessionTaskDelegate, NSURLSessionDataDelegate, NSURLSessionDownloadDelegate, TXVideoPublishListener>
+
+@property (nonatomic, strong) TXUGCPublish *videoPublish;
 
 @property (nullable, nonatomic) NSString * taskId;
 @property (nonatomic) long long expectedBytes;
@@ -43,6 +47,13 @@
   taskOperationQueue:(NSOperationQueue * _Nonnull)operationQueue
             callback:(_Nullable RCTResponseSenderBlock) callback;
 
+- (void) uploadVideo:(NSDictionary  * _Nullable )options
+              baseModule:(ReactNativeBlobUtil * _Nullable)baseModule
+              taskId:(NSString * _Nullable)taskId
+  taskOperationQueue:(NSOperationQueue * _Nonnull)operationQueue
+            callback:(_Nullable RCTResponseSenderBlock) callback;
+
+- (void)cancel;
 @end
 
 #endif /* ReactNativeBlobUtilRequest_h */

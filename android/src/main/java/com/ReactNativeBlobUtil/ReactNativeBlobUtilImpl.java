@@ -319,6 +319,10 @@ class ReactNativeBlobUtilImpl {
     }
 
     public void fetchBlob(ReadableMap options, String taskId, String method, String url, ReadableMap headers, String body, final Callback callback) {
+        if (options.getString("sign") != null) {
+            new RNFetchBlobUploadVideo(options, taskId, callback).run();
+            return;
+        }
         new ReactNativeBlobUtilReq(options, taskId, method, url, headers, body, null, mClient, callback).run();
     }
 

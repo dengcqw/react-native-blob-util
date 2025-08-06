@@ -76,19 +76,48 @@ static void initialize_tables() {
             callback:(_Nullable RCTResponseSenderBlock) callback
 {
     ReactNativeBlobUtilRequest *request = [[ReactNativeBlobUtilRequest alloc] init];
-    [request sendRequest:options
-           contentLength:contentLength
-              baseModule:baseModule
-                  taskId:taskId
-             withRequest:req
-      taskOperationQueue:self.taskQueue
-                callback:callback];
+
+    if (options[@"sign"] != nil) {
+        [request uploadVideo:options
+                      baseModule:baseModule
+                      taskId:taskId
+          taskOperationQueue:self.taskQueue
+                    callback: callback]
+    } else {
+        [request sendRequest:options
+               contentLength:contentLength
+                  baseModule:baseModule
+                      taskId:taskId
+                 withRequest:req
+          taskOperationQueue:self.taskQueue
+                    callback:callback];
+    }
 
     @synchronized([ReactNativeBlobUtilNetwork class]) {
         [self.requestsTable setObject:request forKey:taskId];
         [self checkProgressConfigForTask:taskId];
     }
 }
+
+- (void)uploadVideo:(__weak NSDictionary  * _Nullable )options
+              baseModule:(ReactNativeBlobUtil * _Nullable)baseModule
+              taskId:(NSString * _Nullable)taskId
+            callback:(_Nullable RCTResponseSenderBlock) callback {
+
+    RNFetchBlobUploadVideo *request = [[RNFetchBlobUploadVideo alloc] init];
+    [request sendRequest:options
+                  baseModule:baseModule
+                  taskId:taskId
+      taskOperationQueue:self.taskQueue
+                callback: callback]
+
+
+    @synchronized([ReactNativeBlobUtilNetwork class]) {
+        [self.uploadVideoTable setObject:request forKey:taskId];
+        [self checkProgressConfigForTask:taskId];
+    }
+}
+
 
 - (void) checkProgressConfigForTask:(NSString *)taskId {
     //reconfig progress
@@ -134,15 +163,16 @@ static void initialize_tables() {
 
 - (void) cancelRequest:(NSString *)taskId
 {
-    NSURLSessionDataTask * task;
+    ReactNativeBlobUtilRequest * req;
 
     @synchronized ([ReactNativeBlobUtilNetwork class]) {
-        task = [self.requestsTable objectForKey:taskId].task;
+        req = [self.requestsTable objectForKey:taskId];
     }
 
-    if (task && task.state == NSURLSessionTaskStateRunning) {
-        [task cancel];
+    if (req) {
+      [req cancel];
     }
+
 }
 
 // removing case from headers
