@@ -5,8 +5,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
-import com.RNFetchBlob.videoupload.TXUGCPublish;
-import com.RNFetchBlob.videoupload.TXUGCPublishTypeDef;
+import com.ReactNativeBlobUtil.videoupload.TXUGCPublish;
+import com.ReactNativeBlobUtil.videoupload.TXUGCPublishTypeDef;
 import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.Callback;
 import com.facebook.react.bridge.ReadableMap;
@@ -22,11 +22,13 @@ public class RNFetchBlobUploadVideo extends BroadcastReceiver implements Runnabl
     ReadableMap options;
     String taskId;
     Callback callback;
+    boolean callbackfired;
 
     public RNFetchBlobUploadVideo(ReadableMap options, String taskId, final Callback callback) {
         this.options = options;
         this.taskId = taskId;
         this.callback = callback;
+        this.callbackfired = false;
     }
 
 
@@ -37,21 +39,25 @@ public class RNFetchBlobUploadVideo extends BroadcastReceiver implements Runnabl
 
     private void releaseTaskResource() {
         this.callback = null;
-        if(RNFetchBlobUploadVideo.taskTable.containsKey(taskId)) {
-            TXUGCPublish publish = RNFetchBlobUploadVideo.taskTable.get(taskId);
+        if(taskTable.containsKey(taskId)) {
+            TXUGCPublish publish = taskTable.get(taskId);
             publish.canclePublish();
-            RNFetchBlobUploadVideo.taskTable.remove(taskId);
+            taskTable.remove(taskId);
         }
-        if(ReactNativeBlobUtilReq.uploadProgressReport.containsKey(taskId)) {
-            ReactNativeBlobUtilReq.uploadProgressReport.remove(taskId);
-        }
+        ReactNativeBlobUtilReq.uploadProgressReport.remove(taskId);
+    }
+
+    private void invoke_callback(Object... args) {
+        if (this.callbackfired) return;
+        this.callback.invoke(args);
+        this.callbackfired = true;
     }
 
     public void uploadFile(ReadableMap map) {
         TXUGCPublishTypeDef.TXPublishParam param = new TXUGCPublishTypeDef.TXPublishParam();
         param.signature = map.getString("sign");
         param.videoPath = map.getString("fileURL");
-        String  = map.getString("userID");
+        String userID  = map.getString("userID");
 
         WeakReference<RNFetchBlobUploadVideo> thisRef = new WeakReference<RNFetchBlobUploadVideo>(this);
         TXUGCPublish mVideoPublish = new TXUGCPublish(ReactNativeBlobUtilImpl.RCTContext, userID);
@@ -62,14 +68,13 @@ public class RNFetchBlobUploadVideo extends BroadcastReceiver implements Runnabl
                 Log.d("upload video", "onPublishProgress: " + uploadBytes + "/" + totalBytes);
                 ReactNativeBlobUtilProgressConfig reportConfig = ReactNativeBlobUtilReq.getReportUploadProgress(thisRef.get().taskId);
 
-                double progress = uploadBytes * 1.0 / totalBytes;
-
+                float progress = (totalBytes > 0) ? (float) uploadBytes / totalBytes : 0;
                 if (reportConfig != null && reportConfig.shouldReport((float) progress)) {
                     WritableMap args = Arguments.createMap();
                     args.putString("taskId", taskId);
                     args.putString("written", String.valueOf(uploadBytes));
                     args.putString("total", String.valueOf(totalBytes));
-                    args.putDouble("percent", progress);
+                    args.putString("chunk", "");
                     ReactNativeBlobUtilImpl.RCTContext.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
                             .emit(ReactNativeBlobUtilConst.EVENT_UPLOAD_PROGRESS, args);
                 }
@@ -82,9 +87,9 @@ public class RNFetchBlobUploadVideo extends BroadcastReceiver implements Runnabl
                     WritableMap map = Arguments.createMap();
                     map.putString("videoURL", result.videoURL);
                     map.putString("videoId", result.videoId);
-                    thisRef.get().callback.invoke(map, null);
+                    thisRef.get().invoke_callback(null, null, map, null);
                 } else {
-                    thisRef.get().callback.invoke(null, result.descMsg);
+                    thisRef.get().invoke_callback(result.descMsg, null, null, null);
                 }
                 thisRef.get().releaseTaskResource();
             }

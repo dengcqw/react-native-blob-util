@@ -11,7 +11,7 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 
-import com.RNFetchBlob.BuildConfig;
+import com.ReactNativeBlobUtil.BuildConfig;
 import com.tencent.qcloud.quic.QuicConfig;
 import com.tencent.qcloud.quic.QuicNative;
 import com.tencent.qcloud.quic.QuicProxy;

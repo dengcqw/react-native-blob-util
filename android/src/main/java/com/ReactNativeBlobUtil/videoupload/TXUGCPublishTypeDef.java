@@ -1,7 +1,7 @@
 package com.ReactNativeBlobUtil.videoupload;
 
 
-import com.RNFetchBlob.videoupload.impl.IUploadResumeController;
+import com.ReactNativeBlobUtil.videoupload.impl.IUploadResumeController;
 
 /**
  * Created by yuejiaoli on 2017/7/19.

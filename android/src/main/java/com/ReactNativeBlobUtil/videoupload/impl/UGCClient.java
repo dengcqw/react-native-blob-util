@@ -4,7 +4,7 @@ import android.text.TextUtils;
 import android.util.Log;
 
 
-import com.RNFetchBlob.videoupload.impl.compute.TXOkHTTPEventListener;
+import com.ReactNativeBlobUtil.videoupload.impl.compute.TXOkHTTPEventListener;
 
 import org.json.JSONException;
 import org.json.JSONObject;

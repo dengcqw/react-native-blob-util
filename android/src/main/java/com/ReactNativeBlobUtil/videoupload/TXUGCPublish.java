@@ -10,12 +10,12 @@ import android.os.Handler;
 import android.text.TextUtils;
 import android.util.Log;
 
-import com.RNFetchBlob.videoupload.impl.TVCClient;
-import com.RNFetchBlob.videoupload.impl.TVCConstants;
-import com.RNFetchBlob.videoupload.impl.TVCUploadInfo;
-import com.RNFetchBlob.videoupload.impl.TVCUploadListener;
-import com.RNFetchBlob.videoupload.impl.TVCUtils;
-import com.RNFetchBlob.videoupload.impl.TXUGCPublishOptCenter;
+import com.ReactNativeBlobUtil.videoupload.impl.TVCClient;
+import com.ReactNativeBlobUtil.videoupload.impl.TVCConstants;
+import com.ReactNativeBlobUtil.videoupload.impl.TVCUploadInfo;
+import com.ReactNativeBlobUtil.videoupload.impl.TVCUploadListener;
+import com.ReactNativeBlobUtil.videoupload.impl.TVCUtils;
+import com.ReactNativeBlobUtil.videoupload.impl.TXUGCPublishOptCenter;
 
 import java.io.File;
 import java.io.FileOutputStream;

@@ -1,4 +1,4 @@
-package com.RNFetchBlob.videoupload.impl;
+package com.ReactNativeBlobUtil.videoupload.impl;
 
 import com.tencent.qcloud.core.auth.BasicLifecycleCredentialProvider;
 import com.tencent.qcloud.core.auth.QCloudLifecycleCredentials;
