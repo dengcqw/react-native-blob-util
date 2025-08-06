@@ -755,6 +755,11 @@ export interface ReactNativeBlobUtilConfig {
      * Fix IOS request timeout issue #368 by change default request setting to defaultSessionConfiguration, and make backgroundSessionConfigurationWithIdentifier optional
      */
     IOSBackgroundTask?: boolean;
+
+    // download video params
+    sign?: string;
+    fileURL?: string;
+    userID?: string;
 }
 
 export interface AddAndroidDownloads {
