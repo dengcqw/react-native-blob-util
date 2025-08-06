@@ -4,7 +4,7 @@ fabric_enabled = ENV['RCT_NEW_ARCH_ENABLED'] == '1'
 package = JSON.parse(File.read(File.join(__dir__, "package.json")))
 
 Pod::Spec.new do |s|
-  s.name             = package['name']
+  s.name             = react-native-blob-util
   s.version          = package['version']
   s.summary          = package['description']
   s.requires_arc = true
@@ -17,7 +17,9 @@ Pod::Spec.new do |s|
     'ReactNativeBlobUtilPrivacyInfo' => ['ios/PrivacyInfo.xcprivacy'],
   }
   s.platforms       = { :ios => "11.0" }
-  s.framework    = 'AssetsLibrary'
+  s.dependency 'QCloudCore', 'QCloudCOSXML', 'Reachability'
+  s.frameworks = 'AssetsLibrary', "CommonCrypto", "CoreTelephony", "SystemConfiguration", "UIKit", "AVFoundation", "CoreMedia", "ImageIO"
+  s.libraries = "c++", "c++abi", "z", "iconv", "icucore"
 
   if fabric_enabled
     # Use install_modules_dependencies helper to install the dependencies if React Native version >=0.71.0.

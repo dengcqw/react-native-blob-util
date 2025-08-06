@@ -1,5 +1,5 @@
 {
-  "name": "react-native-blob-util",
+  "name": "@jtreact/react-native-blob-util",
   "version": "0.22.2",
   "description": "A module provides upload, download, and files access API. Supports file stream read/write for process large files.",
   "main": "index",
