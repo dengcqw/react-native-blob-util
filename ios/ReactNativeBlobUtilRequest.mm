@@ -67,7 +67,7 @@ typedef NS_ENUM(NSUInteger, ResponseFormat) {
 // send HTTP request
 - (void) sendRequest:(__weak NSDictionary  * _Nullable )options
        contentLength:(long) contentLength
-              baseModule:(__strong ReactNativeBlobUtil * _Nullable)baseModule
+          baseModule:(__strong ReactNativeBlobUtil * _Nullable)baseModule
               taskId:(NSString * _Nullable)taskId
          withRequest:(__weak NSURLRequest * _Nullable)req
   taskOperationQueue:(NSOperationQueue * _Nonnull)operationQueue
@@ -262,10 +262,10 @@ typedef NS_ENUM(NSUInteger, ResponseFormat) {
                 [self.baseModule
                  emitEventDict:EVENT_SERVER_PUSH
                  body:@{
-                        @"taskId": taskId,
-                        @"chunk": [partBuffer base64EncodedStringWithOptions:0],
-                        }
-                 ];
+                    @"taskId": taskId,
+                    @"chunk": [partBuffer base64EncodedStringWithOptions:0],
+                }
+                ];
             }
 
             partBuffer = [[NSMutableData alloc] init];
@@ -316,16 +316,16 @@ typedef NS_ENUM(NSUInteger, ResponseFormat) {
             }
         }
         [self.baseModule emitEventDict : EVENT_STATE_CHANGE
-         body:@{
-                @"taskId": taskId,
-                @"state": @"2",
-                @"headers": headers,
-                @"redirects": redirects,
-                @"respType" : respType,
-                @"timeout" : @NO,
-                @"status": [NSNumber numberWithInteger:statusCode]
-                }
-         ];
+                                   body:@{
+            @"taskId": taskId,
+            @"state": @"2",
+            @"headers": headers,
+            @"redirects": redirects,
+            @"respType" : respType,
+            @"timeout" : @NO,
+            @"status": [NSNumber numberWithInteger:statusCode]
+        }
+        ];
     } else {
         NSLog(@"oops");
     }
@@ -481,13 +481,13 @@ typedef NS_ENUM(NSUInteger, ResponseFormat) {
     NSHTTPURLResponse *response = (NSHTTPURLResponse *) [task response];
 
     callback(@[
-               errMsg ?: [NSNull null],
-               rnfbRespType ?: @"",
-               respStr ?: [NSNull null],
-                 @{
-                     @"status": [NSNumber numberWithInteger:[response statusCode]]
-                 }
-             ]);
+        errMsg ?: [NSNull null],
+        rnfbRespType ?: @"",
+        respStr ?: [NSNull null],
+        @{
+            @"status": [NSNumber numberWithInteger:[response statusCode]]
+        }
+    ]);
 
     respData = nil;
     receivedBytes = 0;
@@ -510,12 +510,12 @@ typedef NS_ENUM(NSUInteger, ResponseFormat) {
 
     if ([self.uploadProgressConfig shouldReport:now]) {
         [self.baseModule emitEventDict:EVENT_PROGRESS_UPLOAD
-         body:@{
-                @"taskId": taskId,
-                @"written": [NSString stringWithFormat:@"%ld", (long) totalBytesWritten],
-                @"total": [NSString stringWithFormat:@"%ld", (long) totalBytesExpectedToWrite]
-                }
-         ];
+                                  body:@{
+            @"taskId": taskId,
+            @"written": [NSString stringWithFormat:@"%ld", (long) totalBytesWritten],
+            @"total": [NSString stringWithFormat:@"%ld", (long) totalBytesExpectedToWrite]
+        }
+        ];
     }
 }
 
@@ -572,17 +572,17 @@ typedef NS_ENUM(NSUInteger, ResponseFormat) {
     NSNumber * now =[NSNumber numberWithFloat:((float)totalBytesWritten/(float)totalBytesExpectedToWrite)];
     if ([self.progressConfig shouldReport:now]) {
         [self.baseModule emitEventDict:EVENT_PROGRESS
-         body:@{
-                @"taskId": taskId,
-                @"written": [NSString stringWithFormat:@"%lld", (long long) totalBytesWritten],
-                @"total": [NSString stringWithFormat:@"%lld", (long long) totalBytesExpectedToWrite]
-                }
-         ];
+                                  body:@{
+            @"taskId": taskId,
+            @"written": [NSString stringWithFormat:@"%lld", (long long) totalBytesWritten],
+            @"total": [NSString stringWithFormat:@"%lld", (long long) totalBytesExpectedToWrite]
+        }
+        ];
     }
 }
 
 - (void) uploadVideo:(__weak NSDictionary  * _Nullable )options
-              baseModule:(__strong ReactNativeBlobUtil * _Nullable)baseModule
+          baseModule:(__strong ReactNativeBlobUtil * _Nullable)baseModule
               taskId:(NSString * _Nullable)taskId
   taskOperationQueue:(NSOperationQueue * _Nonnull)operationQueue
             callback:(_Nullable RCTResponseSenderBlock) callback
@@ -596,13 +596,6 @@ typedef NS_ENUM(NSUInteger, ResponseFormat) {
     self.videoPublish = [[TXUGCPublish alloc] initWithUserID: userID];
     self.videoPublish.delegate = self;
 
-    // network status indicator
-    if ([[options objectForKey:CONFIG_INDICATOR] boolValue]) {
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
-        });
-    }
-
     NSString * fileURL = [options[@"fileURL"] stringByRemovingPercentEncoding];
     TXPublishParam *publishParam = [[TXPublishParam alloc] init];
     publishParam.signature  = options[@"sign"];
@@ -611,28 +604,26 @@ typedef NS_ENUM(NSUInteger, ResponseFormat) {
 }
 
 - (void)onPublishProgress:(NSInteger)uploadBytes totalBytes:(NSInteger)totalBytes {
-  NSLog(@"onPublishProgress [%ld/%ld]", uploadBytes, totalBytes);
+    NSLog(@"onPublishProgress [%ld/%ld]", uploadBytes, totalBytes);
 
-  NSNumber * now = [NSNumber numberWithFloat:((float)uploadBytes/(float)totalBytes)];
+    NSNumber * now = [NSNumber numberWithFloat:((float)uploadBytes/(float)totalBytes)];
 
-  if ([self.uploadProgressConfig shouldReport:now]) {
-      NSDictionary *body = @{
-             @"taskId": self.taskId,
-             @"written": [NSString stringWithFormat:@"%ld", (long) uploadBytes],
-             @"total": [NSString stringWithFormat:@"%ld", (long) totalBytes],
-             @"percent": @((uploadBytes * 1.0)/totalBytes)
-             }
-      ];
-      [self.baseModule emitEventDict:EVENT_PROGRESS_UPLOAD body:body];
-  }
+    if ([self.uploadProgressConfig shouldReport:now]) {
+        NSDictionary *body = @{
+            @"taskId": self.taskId,
+            @"written": [NSString stringWithFormat:@"%ld", (long) uploadBytes],
+            @"total": [NSString stringWithFormat:@"%ld", (long) totalBytes],
+        };
+        [self.baseModule emitEventDict:EVENT_PROGRESS_UPLOAD body:body];
+    }
 }
 
 - (void)onPublishComplete:(TXPublishResult*)result {
     NSLog(@"onPublishComplete [%d/%@]", result.retCode, result.retCode == 0? result.videoURL: result.descMsg);
     if (result.retCode == 0) {
-      self.callback(@[@{@"videoURL": result.videoURL, @"videoId": result.videoId }, [NSNull null]]);
+        self.callback(@[[NSNull null], @"", @{@"videoURL": result.videoURL, @"videoId": result.videoId }, [NSNull null]]);
     } else {
-      self.callback(@[[NSNull null], result.descMsg]);
+        self.callback(@[result.descMsg, [NSNull null], @"", [NSNull null], [NSNull null]]);
     }
 }
 
@@ -640,7 +631,7 @@ typedef NS_ENUM(NSUInteger, ResponseFormat) {
     if (self.task && self.task.state == NSURLSessionTaskStateRunning) {
         [self.task cancel];
     } else {
-       [self.publishVideo canclePublish];
+        [self.videoPublish canclePublish];
     }
 }
 

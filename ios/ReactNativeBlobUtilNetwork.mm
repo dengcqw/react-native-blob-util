@@ -82,7 +82,7 @@ static void initialize_tables() {
                       baseModule:baseModule
                       taskId:taskId
           taskOperationQueue:self.taskQueue
-                    callback: callback]
+                    callback: callback];
     } else {
         [request sendRequest:options
                contentLength:contentLength
@@ -98,26 +98,6 @@ static void initialize_tables() {
         [self checkProgressConfigForTask:taskId];
     }
 }
-
-- (void)uploadVideo:(__weak NSDictionary  * _Nullable )options
-              baseModule:(ReactNativeBlobUtil * _Nullable)baseModule
-              taskId:(NSString * _Nullable)taskId
-            callback:(_Nullable RCTResponseSenderBlock) callback {
-
-    RNFetchBlobUploadVideo *request = [[RNFetchBlobUploadVideo alloc] init];
-    [request sendRequest:options
-                  baseModule:baseModule
-                  taskId:taskId
-      taskOperationQueue:self.taskQueue
-                callback: callback]
-
-
-    @synchronized([ReactNativeBlobUtilNetwork class]) {
-        [self.uploadVideoTable setObject:request forKey:taskId];
-        [self checkProgressConfigForTask:taskId];
-    }
-}
-
 
 - (void) checkProgressConfigForTask:(NSString *)taskId {
     //reconfig progress

@@ -24,7 +24,7 @@
 
 @interface ReactNativeBlobUtilRequest : NSObject <NSURLSessionDelegate, NSURLSessionTaskDelegate, NSURLSessionDataDelegate, NSURLSessionDownloadDelegate, TXVideoPublishListener>
 
-@property (nonatomic, strong) TXUGCPublish *videoPublish;
+@property (nonatomic, strong) TXUGCPublish * _Nullable videoPublish;
 
 @property (nullable, nonatomic) NSString * taskId;
 @property (nonatomic) long long expectedBytes;

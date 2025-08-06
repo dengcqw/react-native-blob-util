@@ -13,7 +13,6 @@
 #import "ReactNativeBlobUtilProgress.h"
 #import "ReactNativeBlobUtilFS.h"
 #import "ReactNativeBlobUtilRequest.h"
-#import "RNFetchBlobUploadVideo.h"
 
 #if __has_include(<React/RCTAssert.h>)
 #import <React/RCTBridgeModule.h>
@@ -26,7 +25,6 @@
 
 @property(nonnull, nonatomic) NSOperationQueue *taskQueue;
 @property(nonnull, nonatomic) NSMapTable<NSString*, ReactNativeBlobUtilRequest*> * requestsTable;
-@property(nonnull, nonatomic) NSMapTable<NSString*, RNFetchBlobUploadVideo*> * uploadVideoTable;
 @property(nonnull, nonatomic) NSMutableDictionary<NSString*, ReactNativeBlobUtilProgress*> *rebindProgressDict;
 @property(nonnull, nonatomic) NSMutableDictionary<NSString*, ReactNativeBlobUtilProgress*> *rebindUploadProgressDict;
 
