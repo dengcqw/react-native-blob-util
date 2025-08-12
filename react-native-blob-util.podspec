@@ -21,7 +21,7 @@ Pod::Spec.new do |s|
   s.dependency 'QCloudCOSXML'
   s.dependency 'QCloudQuic'
   s.dependency 'Reachability'
-  s.frameworks = 'AssetsLibrary', "CommonCrypto", "CoreTelephony", "SystemConfiguration", "UIKit", "AVFoundation", "CoreMedia", "ImageIO"
+  s.frameworks = 'AssetsLibrary', "CoreTelephony", "SystemConfiguration", "UIKit", "AVFoundation", "CoreMedia", "ImageIO"
   s.libraries = "c++", "c++abi", "z", "iconv", "icucore"
 
   if fabric_enabled
