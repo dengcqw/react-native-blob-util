@@ -625,6 +625,7 @@ typedef NS_ENUM(NSUInteger, ResponseFormat) {
     } else {
         self.callback(@[result.descMsg, [NSNull null], @"", [NSNull null], [NSNull null]]);
     }
+    self.videoPublish = nil;
 }
 
 - (void)cancel {

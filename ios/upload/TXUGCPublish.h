@@ -4,7 +4,7 @@
 
 @interface  TXUGCPublish: NSObject
 
-@property (nonatomic, weak) id<TXVideoPublishListener> delegate;
+@property (nonatomic, strong) id<TXVideoPublishListener> delegate;
 @property (nonatomic, weak) id<TXMediaPublishListener> mediaDelegate;
 
 - (id)initWithUserID:(NSString *)userID;
