@@ -1,5 +1,6 @@
 package com.ReactNativeBlobUtil;
 
+import android.content.Intent;
 import android.net.Uri;
 import android.util.Base64;
 
@@ -190,7 +191,8 @@ class ReactNativeBlobUtilBody extends RequestBody {
         } else if (rawBody.startsWith(ReactNativeBlobUtilConst.CONTENT_PREFIX)) {
             String contentURI = rawBody.substring(ReactNativeBlobUtilConst.CONTENT_PREFIX.length());
             try {
-                return ReactNativeBlobUtilImpl.RCTContext.getContentResolver().openInputStream(Uri.parse(contentURI));
+                Uri uri = Uri.parse(contentURI);
+                return ReactNativeBlobUtilImpl.RCTContext.getContentResolver().openInputStream(uri);
             } catch (Exception e) {
                 throw new Exception("error when getting request stream for content URI: " + contentURI, e);
             }

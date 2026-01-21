@@ -12,9 +12,6 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 
 import com.ReactNativeBlobUtil.BuildConfig;
-import com.tencent.qcloud.quic.QuicConfig;
-import com.tencent.qcloud.quic.QuicNative;
-import com.tencent.qcloud.quic.QuicProxy;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -266,46 +263,6 @@ public class TXUGCPublishOptCenter {
 
     private void detectQuicNet(JSONArray cosArray, final Context context,
                                final CountDownLatch latch, ExecutorService exec) throws JSONException {
-        // quic参数初始化
-        QuicNative.init();
-        QuicNative.setDebugLog(BuildConfig.DEBUG);
-
-        QuicConfig quicConfig = new QuicConfig();
-        quicConfig.setCustomProtocol(false);
-        quicConfig.setRaceType(QuicConfig.RACE_TYPE_ONLY_QUIC);
-        quicConfig.setTotalTimeoutSec(2);
-        QuicProxy.setTnetConfig(quicConfig);
-
-        for (int i = 0; i < cosArray.length(); ++i) {
-            final JSONObject cosInfoJsonObject;
-            cosInfoJsonObject = cosArray.getJSONObject(i);
-            exec.execute(new Runnable() {
-                @Override
-                public void run() {
-                    final String domain = cosInfoJsonObject.optString("domain", "");
-                    final String region = cosInfoJsonObject.optString("region", "");
-                    String ips = cosInfoJsonObject.optString("ip", "");
-                    // 1、获取cos 的iplist
-                    getCosDNS(domain, ips);
-                    if (!TextUtils.isEmpty(domain)) {
-                        QuicClient quicClient = new QuicClient(context);
-                        quicClient.detectQuic(domain, new QuicClient.QuicDetectListener() {
-                            @Override
-                            public void onQuicDetectDone(boolean isQuic, long requestTime, int errorCode) {
-                                Log.i(TAG, "detectQuicNet domain = " + domain
-                                        + ", region = " + region
-                                        + ", timeCos = " + requestTime
-                                        + ", isQuic = " + isQuic);
-                                if (isQuic) {
-                                    sendToCompareCos(domain, region, requestTime, true);
-                                }
-                                latch.countDown();
-                            }
-                        });
-                    }
-                }
-            });
-        }
     }
 
     private void detectBestCos(JSONArray cosArray, final CountDownLatch latch,

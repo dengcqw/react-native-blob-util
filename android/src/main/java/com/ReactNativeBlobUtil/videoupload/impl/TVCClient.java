@@ -466,9 +466,9 @@ public class TVCClient {
             if (mConcurrentCount > 0) {
                 builder.setExecutor(Executors.newFixedThreadPool(mConcurrentCount));
             }
-            if (TXUGCPublishOptCenter.getInstance().isNeedEnableQuic(uploadRegion)) {
-                builder.enableQuic(true).setPort(QuicClient.PORT);
-            }
+//            if (TXUGCPublishOptCenter.getInstance().isNeedEnableQuic(uploadRegion)) {
+//                builder.enableQuic(true).setPort(QuicClient.PORT);
+//            }
 
             CosXmlServiceConfig cosXmlServiceConfig = builder.builder();
 

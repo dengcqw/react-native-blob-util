@@ -88,11 +88,11 @@ android {
 
 dependencies {
     implementation "com.facebook.react:react-native:${safeExtGet('reactNativeVersion', '+')}"
-    implementation 'org.apache.commons:commons-lang3:3.0'
+    implementation 'org.apache.commons:commons-lang3:3.20.0'
 
     // 上传sdk
-    implementation 'com.qcloud.cos:cos-android-nobeacon:5.8.5'
-    implementation 'com.qcloud.cos:quic:1.5.38'
+    implementation 'com.qcloud.cos:cos-android-nobeacon:5.9.48'
+//    implementation 'com.qcloud.cos:quic:1.5.46'
 }
 
 afterEvaluate { project ->
